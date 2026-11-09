@@ -1,14 +1,29 @@
+
 <div align="center">
+# 🫁 **PneumoScope**
 
-# 🫁 PneumoScope
-**Recall-optimised pneumonia detection from chest X-rays, with Grad-CAM explainability and an interactive dashboard**
+> **Recall-Optimised Pneumonia Detection from Chest X-Rays with Grad-CAM Explainability**  
+> *A research demo and portfolio project exploring deep learning interpretability and clinical decision thresholding.*
 
-`PyTorch` · `DenseNet-121` · `Transfer Learning` · `Grad-CAM` · `Streamlit` · `Plotly`
+---
 
-</div>
+## 📌 Overview
 
-> 📸 **Add screenshots here** after you run the dashboard: `docs/diagnose.png`, `docs/performance.png`, `docs/gradcam.png`, e.g. `![Diagnose](docs/diagnose.png)`
+PneumoScope is an end-to-end computer vision and explainable AI (XAI) dashboard built to classify chest X-ray images into **PNEUMONIA** or **NORMAL**. 
 
+Rather than relying on default classification thresholds (0.50), PneumoScope uses a **recall-constrained operating point** (≥98% sensitivity) on validation data to minimize costly False Negatives (missed diagnoses). Every inference is paired with interactive **Grad-CAM visual heatmaps** to highlight the exact regions driving the neural network's decisions.
+
+---
+
+## ✨ Features
+
+- **🔬 Real-Time Diagnostic Dashboard**: Upload custom chest X-rays, adjust decision thresholds dynamically, and visualize Grad-CAM activation heatmaps.
+- **📊 Interactive Performance Analytics**: Live confusion matrix, ROC curves, score distributions, and recall vs. specificity trade-off sliders powered by Plotly.
+- **🖼️ Explainability Gallery**: Pre-calculated Grad-CAM visual evaluations organized by confusion matrix outcomes (TP, FN, FP, TN).
+- **📈 Training Tracking**: Full visualization of training loss, validation AUC, and recall trajectories over epochs.
+- **⚡ PyTorch & DenseNet-121 Architecture**: Transfer learning pipeline optimized with Automatic Mixed Precision (AMP) and cosine annealing learning rate schedules.
+
+---
 ## Why this project
 In screening, **a missed pneumonia (false negative) is far worse than a false alarm**. So instead of maximising accuracy, PneumoScope picks its operating point to hit a target **recall (≥98%)** and then makes the model's reasoning visible with **Grad-CAM**.
 
@@ -31,32 +46,38 @@ python -m src.train --model densenet121 --epochs 12   # GPU recommended (or free
 python -m src.evaluate                                 # metrics, CIs, Grad-CAM gallery
 streamlit run app/dashboard.py
 ```
-Or just `./run_all.sh`. Docker: `docker build -t pneumoscope . && docker run -p 8501:8501 pneumoscope` (mount `outputs/` with trained weights).
 
-## Structure
-```
-src/ config.py data.py model.py train.py evaluate.py gradcam.py
-app/ dashboard.py        # 5-tab Streamlit app
-outputs/                 # best.pt, metrics.json, gallery/ (generated)
-```
 
-## Results
-*Fill in after training (from `outputs/metrics.json`):*
+## 🛠️ Project Structure
 
-| Metric (test, threshold from val) | Value |
-|---|---|
-| Recall | _ |
-| Specificity | _ |
-| ROC-AUC (95% CI) | _ |
+```text
+pneumoscope/
+├── app/
+│   └── dashboard.py          # Interactive Streamlit Web Application
+├── src/
+│   ├── config.py             # Hyperparameters, path configurations, and constants
+│   ├── data.py               # Dataset processing, augmentation, and data loaders
+│   ├── model.py              # PyTorch DenseNet-121 model loading and architecture
+│   ├── train.py              # Transfer learning training pipeline with AMP
+│   ├── evaluate.py           # Evaluation script (metrics, ROC, bootstrap CIs)
+│   └── gradcam.py            # Grad-CAM heatmap extraction and overlay engine
+├── outputs/
+│   ├── best.pt               # Trained PyTorch model weights
+│   ├── metrics.json          # Test set evaluation summary & metrics
+│   ├── history.json          # Training history logs
+│   └── test_predictions.csv  # Model outputs on test dataset
+├── .gitignore                # Excludes virtual environments and datasets
+├── requirements.txt          # Python dependencies
+└── README.md                 # Project documentation
+# 🫁 PneumoScope
+**Recall-optimised pneumonia detection from chest X-rays, with Grad-CAM explainability and an interactive dashboard**
 
-## Limitations (be upfront in interviews)
-Single-source paediatric dataset; the test set is small and distribution-shifted vs train; no external validation; Grad-CAM is a sanity check, not proof of causal reasoning. **Not a medical device.**
+`PyTorch` · `DenseNet-121` · `Transfer Learning` · `Grad-CAM` · `Streamlit` · `Plotly`
 
-## Resume line
-*Fine-tuned a DenseNet-121 on 5.8k chest X-rays with patient-level splits, optimising a recall-constrained decision threshold, and shipped Grad-CAM explainability in an interactive Streamlit dashboard.*
 
-## Push to GitHub
-```bash
-git init && git add . && git commit -m "PneumoScope: pneumonia detection with Grad-CAM"
-git branch -M main && git remote add origin https://github.com/<you>/pneumoscope.git && git push -u origin main
-```
+Fine-tuned a DenseNet-121 on 5.8k chest X-rays with patient-level splits, optimising a recall-constrained decision threshold, and shipped Grad-CAM explainability in an interactive Streamlit dashboard.
+</div>
+
+
+
+
